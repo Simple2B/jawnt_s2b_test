@@ -1,7 +1,6 @@
 import "./App.css";
 import TransportList from "./JawntScreen/TransportList";
 import Map from "./JawntScreen/Map";
-import { useState } from "react";
 
 const transport = [
   {
@@ -13,17 +12,10 @@ const transport = [
 ];
 
 function App() {
-  // const [transport1, setTransport] = useState([
-  //   { id: 1, type: "Bike" },
-  //   { id: 2, type: "Bus" },
-  // ]);
-
   return (
     <div className="App">
       <h1>CityCoHo live transit information</h1>
-      <div>
-        <TransportList transport={transport} />
-      </div>
+      <TransportList transport={transport} />
       <Map transport={transport} />
     </div>
   );

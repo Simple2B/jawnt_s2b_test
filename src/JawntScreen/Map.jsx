@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import icon from "leaflet/dist/images/marker-icon.png";
@@ -30,16 +30,19 @@ let yellowIcon = new L.Icon({
 });
 
 function Map(props) {
-  const [transportMarkers, settransportMarkers] = useState();
+  const cityCoHoCoors = [39.951, -75.179];
+  const mapZoom = 16;
+  const bikeStatuionID = 3256;
+  const refreshInterval = 30000;
 
   useEffect(() => {
-    var container = L.DomUtil.get("map");
+    let container = L.DomUtil.get("map");
 
     if (container != null) {
       container._leaflet_id = null;
     }
 
-    var map = L.map("map").setView([39.951, -75.179], 16);
+    let map = L.map("map").setView(cityCoHoCoors, mapZoom);
     L.tileLayer(
       "https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}",
       {
@@ -53,10 +56,9 @@ function Map(props) {
           "pk.eyJ1IjoidGFyLWhlbCIsImEiOiJjbDJnYWRieGMwMTlrM2luenIzMzZwbGJ2In0.RQRMAJqClc4qoNwROT8Umg",
       }
     ).addTo(map);
-    var transportMarkers = new L.LayerGroup().addTo(map);
-    settransportMarkers(transportMarkers);
+    let transportMarkers = new L.LayerGroup().addTo(map);
     L.Marker.prototype.options.icon = DefaultIcon;
-    var marker = L.marker([39.951, -75.179]).addTo(map);
+    let marker = L.marker(cityCoHoCoors).addTo(map);
     marker.bindPopup("<b>CityCoHo</b>").openPopup();
 
     const transportInterval = setInterval(() => {
@@ -67,14 +69,9 @@ function Map(props) {
         fetch("https://dry-plains-47117.herokuapp.com/" + transport.link)
           .then((res) => res.json())
           .then((result) => {
-            console.log(result);
             if (transport.type === "Bus") {
               for (let bus of result.bus) {
-                console.log("busCoors", [
-                  parseFloat(bus.lat),
-                  parseFloat(bus.lng),
-                ]);
-                var busMarker = L.marker(
+                let busMarker = L.marker(
                   [parseFloat(bus.lat), parseFloat(bus.lng)],
                   { icon: yellowIcon }
                 ).addTo(transportMarkers);
@@ -89,8 +86,8 @@ function Map(props) {
               }
             } else if (transport.type === "Bike") {
               for (let bike of result.features) {
-                if (bike.properties.id === 3256) {
-                  var bikeMarker = L.marker(
+                if (bike.properties.id === bikeStatuionID) {
+                  let bikeMarker = L.marker(
                     bike.geometry.coordinates.reverse(),
                     { icon: greenIcon }
                   ).addTo(transportMarkers);
@@ -108,7 +105,7 @@ function Map(props) {
             }
           });
       }
-    }, 30000);
+    }, refreshInterval);
 
     return () => {
       clearInterval(transportInterval);
