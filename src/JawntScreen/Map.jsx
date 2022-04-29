@@ -3,7 +3,6 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import icon from "leaflet/dist/images/marker-icon.png";
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
-import Transport from "./Transport";
 
 let DefaultIcon = L.icon({
   iconUrl: icon,
@@ -31,8 +30,6 @@ let yellowIcon = new L.Icon({
 });
 
 function Map(props) {
-  // const [coordinatesBus, setcoordinatesBus] = useState([]);
-  // const [coordinatesBike, setcoordinatesBike] = useState([]);
   const [transportMarkers, settransportMarkers] = useState();
 
   useEffect(() => {
@@ -89,17 +86,10 @@ function Map(props) {
                     })
                     .openPopup();
                 }
-                //map.map("map").setView([39.951, -75.179], 15);
               }
             } else if (transport.type === "Bike") {
               for (let bike of result.features) {
-                if (
-                  bike.properties.id === 3256
-                  // bikeCoors[0] < 39.955 &&
-                  // bikeCoors[0] > 39.93 &&
-                  // bikeCoors[1] < -75.171 &&
-                  // bikeCoors[1] > -75.191
-                ) {
+                if (bike.properties.id === 3256) {
                   var bikeMarker = L.marker(
                     bike.geometry.coordinates.reverse(),
                     { icon: greenIcon }
@@ -113,7 +103,6 @@ function Map(props) {
                       }
                     )
                     .openPopup();
-                  //map.map("map").setView([39.951, -75.179], 15);
                 }
               }
             }
@@ -126,29 +115,7 @@ function Map(props) {
     };
   }, []);
 
-  // useEffect(() => {
-  //   if (transportMarkers !== undefined) {
-  //     transportMarkers.clearLayers();
-  //   }
-  //   for (let bus of coordinatesBus) {
-  //     //console.log([parseFloat(bus.lat), parseFloat(bus.lng)]);
-  //     var marker = L.marker([parseFloat(bus.lat), parseFloat(bus.lng)]).addTo(
-  //       transportMarkers
-  //     );
-  //     marker.bindPopup("<b>bus</b>").openPopup();
-  //     L.map("map").setView([39.951, -75.179], 15);
-  //   }
-  //   // for (let bike of coordinatesBike) {
-  //   //   var marker = L.marker(bike.geometry.coordinates.reverse()).addTo(
-  //   //     transportMarkers
-  //   //   );
-  //   //   marker.bindPopup("<b>bike</b>").openPopup();
-  //   // }
-  // }, [coordinatesBus]);
-
   return <div id="map" style={{ height: "800px", width: "100%" }}></div>;
 }
-
-//setInterval(Map, 5000);
 
 export default Map;

@@ -1,13 +1,4 @@
 import React from "react";
-//import Transport from "./Transport";
-
-const styles = {
-  ul: {
-    listStyle: "none",
-    margin: 0,
-    padding: 0,
-  },
-};
 
 export default function TransportList(props) {
   return (
